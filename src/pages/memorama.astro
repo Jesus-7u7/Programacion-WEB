@@ -10,29 +10,88 @@ import Layout from '../layouts/Layout.astro'
         <!-- Cuadrícula de Imágenes -->
         <div class="grid grid-cols-4 grid-rows-3 gap-4">
           <!-- Fila 1 -->
-          <img src="/tux.jpg" alt="Imagen 1" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 2" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 3" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 4" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
+          <img id="img1" src="/tux.jpg" alt="Imagen 1" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img1');">
+          <img id="img2" src="/tux.jpg" alt="Imagen 2" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img2');">
+          <img id="img3" src="/tux.jpg" alt="Imagen 3" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img3');">
+          <img id="img4" src="/tux.jpg" alt="Imagen 4" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img4');">
       
           <!-- Fila 2 -->
-          <img src="/tux.jpg" alt="Imagen 5" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 6" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 7" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 8" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
+          <img id="img5" src="/tux.jpg" alt="Imagen 5" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img5');">
+          <img id="img6" src="/tux.jpg" alt="Imagen 6" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img6');">
+          <img id="img7" src="/tux.jpg" alt="Imagen 7" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img7');">
+          <img id="img8" src="/tux.jpg" alt="Imagen 8" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img8');">
       
           <!-- Fila 3 -->
-          <img src="/tux.jpg" alt="Imagen 9" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 10" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 11" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
-          <img src="/tux.jpg" alt="Imagen 12" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto">
+          <img id="img9" src="/tux.jpg" alt="Imagen 9" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img9');">
+          <img id="img10" src="/tux.jpg" alt="Imagen 10" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img10');">
+          <img id="img11" src="/tux.jpg" alt="Imagen 11" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img11');">
+          <img id="img12" src="/tux.jpg" alt="Imagen 12" class="col-span-1 row-span-1 w-1/2 rounded-xl mx-auto" onclick="cambiarImagen('img12');">
         </div>
-      </div>
-      
-
-        
-
-
-
-        
+    </div>
+  
 </Layout>
+<script>
+  // Arreglo de las imágenes a reemplazar
+  let imgArray = ["/C.jpg", "/CS.png", "/CC.png", "/Java.jpg", "/JS.png", "/PY.png", "/C.jpg", "/CS.png", "/CC.png", "/Java.jpg", "/JS.png", "/PY.png"];
+
+  // Función para barajear las cartas
+  function shuffle(array: string[]) {
+      for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+      }
+  }
+
+  // Barajear las cartas al cargar la página
+  shuffle(imgArray);
+
+  // Arreglo para almacenar los IDs de las imágenes seleccionadas
+  let selectedImages: string[] = [];
+
+  // Función para cambiar la imagen al hacer clic
+  function cambiarImagen(imgId: string) {
+    const imgElement = document.getElementById(imgId) as HTMLImageElement;
+    const index = parseInt(imgId.substring(3)) - 1; // Obtener el índice correspondiente en imgArray
+
+    // Verificar si la carta ya fue emparejada o si ya hay dos cartas seleccionadas
+    if (!selectedImages.includes(imgId) && selectedImages.length < 2) {
+        // Reemplazar la imagen
+        imgElement.src = imgArray[index];
+        selectedImages.push(imgId);
+
+        // Si se han seleccionado dos cartas, compararlas
+        if (selectedImages.length === 2) {
+            const [imgId1, imgId2] = selectedImages;
+            const index1 = parseInt(imgId1.substring(3)) - 1;
+            const index2 = parseInt(imgId2.substring(3)) - 1;
+
+            // Verificar si las dos cartas son iguales
+            if (imgArray[index1] === imgArray[index2]) {
+                // Mantener las cartas destapadas
+                selectedImages = [];
+            } else {
+                // Si las cartas no son iguales, taparlas después de un breve tiempo
+                setTimeout(() => {
+                    document.getElementById(imgId1)?.setAttribute('src', '/tux.jpg');
+                    document.getElementById(imgId2)?.setAttribute('src', '/tux.jpg');
+                    selectedImages = [];
+                }, 1000); // Tiempo en milisegundos
+            }
+        }
+    }
+  }
+
+  // Attach event listeners after the DOM has loaded
+  document.addEventListener('DOMContentLoaded', function () {
+      for (let i = 1; i <= 12; i++) {
+          const imgId = `img${i}`;
+          const imgElement = document.getElementById(imgId);
+
+          if (imgElement) {
+              imgElement.addEventListener('click', function () {
+                  cambiarImagen(imgId);
+              });
+          }
+      }
+  });
+</script>
