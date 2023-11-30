@@ -3,7 +3,60 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout>
-		<div slot="article" class="w-full flex justify-center dark:bg-violet-200 dark:text-whrite mt-5 mb-5">
+		<div slot="article" class="w-full flex flex-col items-center dark:bg-violet-200 dark:text-whrite mt-5 mb-5">
 			<h1 class="text-4xl">CVU</h1>
+
+			<div class="perfil-home-cvu p-4 border border-gray-300 rounded-md">
+				<!-- Imagen de perfil -->
+				<img src="/f1.jpg" alt="foto de perfil" class="w-25 h-25 rounded-full mr-4">
+	
+				<!-- Nombre -->
+				<h3 class="text-xl mb-4">Jesús Gilberto Gonzalez Sosa</h3>
+				
+				<!-- Secciones con datos -->
+				<fieldset class="mb-4">
+					<legend class="text-lg font-semibold">Domicilio</legend>
+					<ul>
+						<li> <span> Calle:</span> Cayutlan #59 </li>
+						<li> <span> Localidad:</span> Tlajomulco, Jalisco. </li>
+						<li> <span> CP.</span> 45640</li>
+						<li> <span> Telefono:</span> 6674472516 </li>
+					</ul>
+				</fieldset>
+			   
+				<fieldset class="mb-4">
+					<legend class="text-lg font-semibold">Datos Generales</legend>
+					<ul>
+						<li> <span> Fecha de nacimiento:</span> 17/08/2002 </li>
+						<li> <span> CURP:</span> GOSJ020817HJCNSSA2 </li>
+						<li> <span> Cedula licenciatura:</span> NA </li>
+						<li> <span> Cedula maestría:</span> NA </li>
+						<li> <span> Email:</span> LT20170682@tlajomulco.tecnm.mx </li>
+					</ul>   
+				</fieldset>
+			  
+				<fieldset class="mb-4">
+					<legend class="text-lg font-semibold">Formacion académica</legend>
+					<ul>
+						<li> <span>Ing. Sistemas Computacionales:</span> Tecnológico de Tlajomulco  </li>
+						<li> <span>Cedula profesional:</span> NA  </li>
+					</ul>
+				</fieldset>
+				
+				<fieldset class="mb-4">
+					<legend class="text-lg font-semibold">Experiencia laboral</legend>
+					<ul>
+						<li> <span>Empleado: </span> 6 meses  </li>
+					</ul>
+				</fieldset>
+				
+				<fieldset>
+					<legend class="text-lg font-semibold">Idiomas</legend>
+					<ul>
+						<li> <span>Español:</span> Nativo  </li>
+						<li> <span>Ingles:</span> 10%</li>
+					</ul>
+				</fieldset>
+			</div>
 		</div>
 </Layout>

@@ -3,7 +3,347 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout>
-		<div slot="article" class="w-full flex justify-center dark:bg-violet-200 dark:text-whrite mt-5 mb-5">
-			<h1 class="text-4xl">Contacto</h1>
+		<div slot="article" class="w-full flex flex-col items-center dark:bg-violet-200 dark:text-whrite mt-5 mb-5">
+			<h1 class="text-4xl mt-5 mb-5">Juego del Ahorcado</h1>
+        <h3 class="text-lg mb-5">Tema: Nombre de Paises</h3>
+
+        <div class="flex flex-col lg:flex-row lg:items-center">
+            <!-- Contenedor del juego (izquierda) -->
+            <div class="textoah flex flex-col items-center mb-4 lg:mb-0 lg:mr-4">
+                <div id="word-display" class="mb-2"></div>
+                <div id="word-length" class="mb-2"></div>
+                <div id="guesses-left" class="mb-2"></div>
+                <div id="letters-guessed" class="mb-2"></div>
+                <input type="text" id="guess-input" maxlength="1" class="p-2 border border-gray-300 rounded-md mb-2">
+                <button id="guess-button" class="bg-blue-500 text-white p-2 rounded-md">Adivinar</button>
+            </div>
+
+            <!-- Imagen del ahorcado (derecha) -->
+            <div class="img-ahorcado">
+                <img id="ah0" src="/ah00.png" alt="Imagen del ahorcado" class="w-48 h-36 mb-2">
+            </div>
+        </div>
+			
 		</div>
 </Layout>
+<script lang="js">
+	// Lista de palabras para adivinar
+const palabras = [
+  "afganistan",
+  "albania",
+  "alemania",
+  "andorra",
+  "angola",
+  "antigua y barbuda",
+  "arabia saudita",
+  "argelia",
+  "argentina",
+  "armenia",
+  "australia",
+  "austria",
+  "azerbaiyan",
+  "bahamas",
+  "bangladesh",
+  "barbados",
+  "barein",
+  "belgica",
+  "belice",
+  "benin",
+  "bielorrusia",
+  "birmania (myanmar)",
+  "bolivia",
+  "bosnia y herzegovina",
+  "botsuana",
+  "brasil",
+  "brunei",
+  "bulgaria",
+  "burkina faso",
+  "burundi",
+  "butan",
+  "cabo verde",
+  "camboya",
+  "camerun",
+  "canada",
+  "catar",
+  "chad",
+  "chile",
+  "china",
+  "chipre",
+  "colombia",
+  "comoras",
+  "congo",
+  "corea del norte",
+  "corea del sur",
+  "costa de marfil",
+  "costa rica",
+  "croacia",
+  "cuba",
+  "dinamarca",
+  "dominica",
+  "ecuador",
+  "egipto",
+  "el salvador",
+  "emiratos arabes unidos",
+  "eritrea",
+  "eslovaquia",
+  "eslovenia",
+  "espana",
+  "estados unidos",
+  "estonia",
+  "etiopia",
+  "filipinas",
+  "finlandia",
+  "fiji",
+  "francia",
+  "gabon",
+  "gambia",
+  "georgia",
+  "ghana",
+  "granada",
+  "grecia",
+  "guatemala",
+  "guinea",
+  "guinea ecuatorial",
+  "guinea-bisau",
+  "guyana",
+  "haiti",
+  "honduras",
+  "hungria",
+  "india",
+  "indonesia",
+  "irak",
+  "iran",
+  "irlanda",
+  "islandia",
+  "islas marshall",
+  "islas salomon",
+  "israel",
+  "italia",
+  "jamaica",
+  "japon",
+  "jordania",
+  "kazajistan",
+  "kenia",
+  "kirguistan",
+  "kiribati",
+  "kuwait",
+  "laos",
+  "lesoto",
+  "letonia",
+  "libano",
+  "liberia",
+  "libia",
+  "liechtenstein",
+  "lituania",
+  "luxemburgo",
+  "macedonia",
+  "madagascar",
+  "malasia",
+  "malaui",
+  "maldivas",
+  "mali",
+  "malta",
+  "marruecos",
+  "mauricio",
+  "mauritania",
+  "mexico",
+  "micronesia",
+  "moldavia",
+  "monaco",
+  "mongolia",
+  "montenegro",
+  "mozambique",
+  "namibia",
+  "nauru",
+  "nepal",
+  "nicaragua",
+  "niger",
+  "nigeria",
+  "noruega",
+  "nueva zelanda",
+  "oman",
+  "paises bajos",
+  "pakistan",
+  "palau",
+  "panama",
+  "papua nueva guinea",
+  "paraguay",
+  "peru",
+  "polonia",
+  "portugal",
+  "reino unido",
+  "republica centroafricana",
+  "republica checa",
+  "republica del congo",
+  "republica dominicana",
+  "ruanda",
+  "rumania",
+  "rusia",
+  "samoa",
+  "san cristobal y nevis",
+  "san marino",
+  "san vicente y las granadinas",
+  "santa lucia",
+  "santo tome y principe",
+  "senegal",
+  "serbia",
+  "seychelles",
+  "sierra leona",
+  "singapur",
+  "siria",
+  "somalia",
+  "sri lanka",
+  "suazilandia",
+  "sudafrica",
+  "sudan",
+  "sudan del sur",
+  "suecia",
+  "suiza",
+  "surinam",
+  "tailandia",
+  "taiwan",
+  "tanzania",
+  "tayikistan",
+  "timor oriental",
+  "togo",
+  "tonga",
+  "trinidad y tobago",
+  "tunez",
+  "turkmenistan",
+  "turquia",
+  "tuvalu",
+  "ucrania",
+  "uganda",
+  "uruguay",
+  "uzbekistan",
+  "vanuatu",
+  "vaticano",
+  "venezuela",
+  "vietnam",
+  "yemen",
+  "yibuti",
+  "zambia",
+  "zimbabue"
+];
+
+// Palabra aleatoria
+let palabra = palabras[Math.floor(Math.random() * palabras.length)];
+let letrasAdivinadas = [];
+let intentosRestantes = 5;
+let r=0;
+
+// Elementos del DOM
+const wordLength = document.getElementById('word-length');
+const wordDisplay = document.getElementById('word-display');
+const guessesLeft = document.getElementById('guesses-left');
+const lettersGuessed = document.getElementById('letters-guessed');
+const guessInput = document.getElementById('guess-input');
+const guessButton = document.getElementById('guess-button');
+
+// Inicialización del juego
+function initGame() {
+  palabra = palabras[Math.floor(Math.random() * palabras.length)];
+  letrasAdivinadas = [];
+  intentosRestantes = 5;
+  renderWord();
+  renderGuessesLeft();
+  renderLettersGuessed();
+  renderWordLength(); // Mostrar la longitud al inicio
+  guessInput.value = '';
+}
+
+function renderWordLength() {
+  wordLength.innerHTML = `Cantidad de caracteres: ${palabra.length}`;
+}
+
+// Función para renderizar la palabra oculta
+function renderWord() {
+    wordDisplay.innerHTML = palabra
+        .split('')
+        .map(l => letrasAdivinadas.includes(l) ? l : '_')
+        .join(' ');
+}
+
+// Función para renderizar los intentos restantes
+function renderGuessesLeft() {
+    guessesLeft.innerHTML = `Intentos restantes: ${intentosRestantes}`;
+}
+
+
+// Función para renderizar las letras adivinadas
+function renderLettersGuessed() {
+    lettersGuessed.innerHTML = `Letras utilizadas: ${letrasAdivinadas.join(', ')}`;
+}
+
+// Función para comprobar si el jugador ha ganado
+function checkWin() {
+    if (palabra.split('').every(l => letrasAdivinadas.includes(l))) {
+        //alert('¡Felicidades! Has ganado.');
+        document.getElementById("ah0").src="/ganado.gif";
+        r=0;
+        //initGame();
+    }
+}
+
+// Función para comprobar si el jugador ha perdido
+function checkLoss() {
+    if (intentosRestantes === 0) {
+        alert(`¡Perdiste! La palabra era: ${palabra}`);
+        document.getElementById("ah0").src="/ah00.png";
+        r=0;
+        initGame();
+    }
+}
+
+function handleGuess() {
+  const guess = guessInput.value.toLowerCase();
+
+  if (guess.length !== 1 || !guess.match(/[a-z,ñ, ]/)) {
+      alert('Por favor, ingresa una letra válida.');
+      return;
+  }
+
+  if (letrasAdivinadas.includes(guess)) {
+      alert('Ya usaste esta letra.');
+      return;
+  }
+
+  letrasAdivinadas.push(guess);
+  if (!palabra.includes(guess)) {
+      intentosRestantes--;
+      r++;
+        document.getElementById("ah0").src="/ah0"+(r)+".png";
+  }
+
+  renderWord();
+  renderGuessesLeft();
+  renderLettersGuessed();
+
+  checkWin();
+  checkLoss();
+  renderWordLength(); // Actualizar la longitud de la palabra
+
+  guessInput.value = ''; // Limpia el campo de entrada después de adivinar
+}
+
+guessButton.addEventListener('click', handleGuess);
+
+// Inicializar el juego
+initGame();
+ function enter(event){
+  if (event.witch===13){
+    checkLoss();
+  }
+ }
+
+ guessInput.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+      handleGuess();
+  }
+});
+
+function recargar () {
+  window.location.href = window.location.href;
+  //setInterval("location.reload()",10);
+}
+</script>

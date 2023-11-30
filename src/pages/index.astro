@@ -3,7 +3,12 @@ import Layout from '../layouts/Layout.astro'
 ---
 
 <Layout>
-		<div slot="article" class="w-full flex justify-center dark:bg-violet-200 dark:text-whrite mt-5 mb-5">
-			<h1 class="text-4xl">Cuerpo de la pagina</h1>
+		<div slot="article" class="w-full flex flex-col items-center dark:bg-violet-200 dark:text-whrite mt-5 mb-5">
+			<h1 class="text-4xl mt-5 mb-5 justify-center">Bienvenido al inicio</h1>
+
+			<!-- Imagen en el centro -->
+			<div class="flex items-center justify-center">
+				<img src="/Yo.jpg" alt=Jesus" class="w-70 h-60 rounded-full" />
+			</div>
 		</div>
 </Layout>
